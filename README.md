@@ -4,6 +4,10 @@ A learning and reference project exploring various NestJS concepts, patterns, an
 
 ## 📦 Currently Implemented
 
+### Middleware
+
+**Correlation ID Middleware** - Adds a unique request ID to each request for distributed tracing. Uses existing `x-correlation-id` header if provided, otherwise generates a new UUID. Runs early in the request lifecycle, making the correlation ID available to all components.
+
 ### Interceptors
 
 **Performance Interceptor** - Monitors endpoint response times and logs warnings for slow requests.
@@ -35,11 +39,14 @@ RETRY_DELAY=1000
 - `GET /slow` - Simulates slow response (>500ms)
 - `GET /error` - Demonstrates retry behavior
 - `GET /fast` - Normal fast response
+- `GET /correlation-id` - Returns the correlation ID for the current request
 
 ## 🏗️ Project Structure
 
 ```
 src/
+├── middleware/
+│   └── correlation-id.middleware.ts
 ├── interceptors/
 │   ├── performance.interceptor.ts
 │   └── retry.interceptor.ts

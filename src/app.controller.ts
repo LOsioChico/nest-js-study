@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { PerformanceInterceptor } from './interceptors/performance.interceptor';
 import { RetryInterceptor } from './interceptors/retry.interceptor';
+import { getCorrelationId } from './context/correlation-id.context';
 
 @Controller()
 export class AppController {
@@ -36,5 +37,17 @@ export class AppController {
   @Get('fast')
   getFast(): string {
     return 'This endpoint responds quickly';
+  }
+
+  @Get('correlation-id')
+  getCorrelationId() {
+    // Access correlation ID from AsyncLocalStorage
+    // This is a test to ensure the correlation ID is available in the AsyncLocalStorage
+    // This can be accessed in any part of the application
+    const correlationId = getCorrelationId();
+    return {
+      correlationId: correlationId,
+      message: 'Correlation ID accessed via AsyncLocalStorage',
+    };
   }
 }
