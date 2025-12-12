@@ -1,6 +1,8 @@
 import {
   CallHandler,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   Logger,
   NestInterceptor,
@@ -20,6 +22,15 @@ export class RetryInterceptor implements NestInterceptor {
     this.delay = this.configService.get<number>('RETRY_DELAY', 1000);
   }
 
+  private shouldRetry(error: unknown): boolean {
+    if (error instanceof HttpException) {
+      const status = error.getStatus();
+      return status >= HttpStatus.INTERNAL_SERVER_ERROR.valueOf(); // Only retry 5xx errors
+    }
+    // Retry other errors (network errors, etc.)
+    return true;
+  }
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest<Request>();
     const { method, url } = request;
@@ -28,6 +39,10 @@ export class RetryInterceptor implements NestInterceptor {
       retry({
         count: this.maxRetries,
         delay: (error: unknown, retryCount: number) => {
+          if (!this.shouldRetry(error)) {
+            throw error; // Don't retry, throw immediately
+          }
+
           const errorMessage =
             error instanceof Error ? error.message : String(error);
           this.logger.warn(
