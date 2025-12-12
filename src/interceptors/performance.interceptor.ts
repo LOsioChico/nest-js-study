@@ -26,13 +26,23 @@ export class PerformanceInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest<Request>();
 
     return next.handle().pipe(
-      tap(() => {
-        const duration = Date.now() - start;
-        if (duration > this.slowThreshold) {
-          this.logger.warn(
-            `Slow endpoint: ${req.method} ${req.url} - ${duration}ms`,
-          );
-        }
+      tap({
+        next: () => {
+          const duration = Date.now() - start;
+          if (duration > this.slowThreshold) {
+            this.logger.warn(
+              `Slow endpoint: ${req.method} ${req.url} - ${duration}ms`,
+            );
+          }
+        },
+        error: () => {
+          const duration = Date.now() - start;
+          if (duration > this.slowThreshold) {
+            this.logger.warn(
+              `Slow endpoint (failed): ${req.method} ${req.url} - ${duration}ms`,
+            );
+          }
+        },
       }),
     );
   }
