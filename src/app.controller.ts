@@ -3,10 +3,13 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Query,
+  UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
 import { PerformanceInterceptor } from './interceptors/performance.interceptor';
 import { RetryInterceptor } from './interceptors/retry.interceptor';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { getCorrelationId } from './context/correlation-id.context';
 
 @Controller()
@@ -32,6 +35,32 @@ export class AppController {
       'Simulated error',
       HttpStatus.INTERNAL_SERVER_ERROR,
     );
+  }
+
+  @Get('filter')
+  @UseFilters(HttpExceptionFilter)
+  testErrors(@Query('type') type?: string): never {
+    // Returns different types of errors based on query parameter
+    switch (type) {
+      case 'not-found':
+        throw new HttpException('Resource not found', HttpStatus.NOT_FOUND);
+      case 'bad-request':
+        throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+      case 'unauthorized':
+        throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+      case 'forbidden':
+        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      case 'server-error':
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      default:
+        throw new HttpException(
+          'Invalid error type. Use ?type=not-found|bad-request|unauthorized|forbidden|server-error|unhandled',
+          HttpStatus.BAD_REQUEST,
+        );
+    }
   }
 
   @Get('correlation-id')

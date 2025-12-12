@@ -15,6 +15,10 @@ A learning and reference project exploring various NestJS concepts, patterns, an
 
 All interceptors are registered only on the routes they are applied to.
 
+### Filters
+
+**HttpException Filter** - Exception filter that catches all HttpException exceptions and returns standardized error responses. Applied to specific routes using `@UseFilters()` decorator.
+
 ## 🚀 Quick Start
 
 ```bash
@@ -37,8 +41,13 @@ RETRY_DELAY=1000
 
 - `GET /` - Basic endpoint
 - `GET /slow` - Simulates slow response (>500ms)
-- `GET /error` - Demonstrates retry behavior
-- `GET /fast` - Normal fast response
+- `GET /error` - Demonstrates retry behavior (500 error)
+- `GET /filter?type=<error-type>` - Demonstrates exception filter with different error types:
+  - `?type=not-found` - 404 error
+  - `?type=bad-request` - 400 error
+  - `?type=unauthorized` - 401 error
+  - `?type=forbidden` - 403 error
+  - `?type=server-error` - 500 error
 - `GET /correlation-id` - Returns the correlation ID for the current request
 
 ## 🏗️ Project Structure
@@ -50,6 +59,10 @@ src/
 ├── interceptors/
 │   ├── performance.interceptor.ts
 │   └── retry.interceptor.ts
+├── filters/
+│   └── http-exception.filter.ts
+├── context/
+│   └── correlation-id.context.ts
 ├── app.controller.ts
 ├── app.module.ts
 ├── main.ts
