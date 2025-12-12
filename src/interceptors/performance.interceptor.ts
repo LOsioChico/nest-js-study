@@ -38,7 +38,7 @@ export class PerformanceInterceptor implements NestInterceptor {
         error: () => {
           const duration = Date.now() - start;
           if (duration > this.slowThreshold) {
-            this.logger.warn(
+            this.logger.error(
               `Slow endpoint (failed): ${req.method} ${req.url} - ${duration}ms`,
             );
           }
