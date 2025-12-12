@@ -1,4 +1,12 @@
-import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  UseInterceptors,
+} from '@nestjs/common';
+import { PerformanceInterceptor } from './interceptors/performance.interceptor';
+import { RetryInterceptor } from './interceptors/retry.interceptor';
 
 @Controller()
 export class AppController {
@@ -8,6 +16,7 @@ export class AppController {
   }
 
   @Get('slow')
+  @UseInterceptors(PerformanceInterceptor)
   async getSlow(): Promise<string> {
     // Simulate slow operation
     await new Promise((resolve) => setTimeout(resolve, 600));
@@ -15,6 +24,7 @@ export class AppController {
   }
 
   @Get('error')
+  @UseInterceptors(RetryInterceptor)
   getError(): never {
     // This will trigger retry interceptor
     throw new HttpException(

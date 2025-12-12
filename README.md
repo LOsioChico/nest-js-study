@@ -9,7 +9,7 @@ A learning and reference project exploring various NestJS concepts, patterns, an
 **Performance Interceptor** - Monitors endpoint response times and logs warnings for slow requests.
 **Retry Interceptor** - Automatically retries failed requests with exponential backoff (1s, 2s, 4s, etc.).
 
-Both interceptors are registered globally and apply to all routes.
+All interceptors are registered only on the routes they are applied to.
 
 ## 🚀 Quick Start
 
