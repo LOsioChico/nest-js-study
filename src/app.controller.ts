@@ -1,16 +1,24 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
+  Post,
   Query,
   UseFilters,
   UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { PerformanceInterceptor } from './interceptors/performance.interceptor';
 import { RetryInterceptor } from './interceptors/retry.interceptor';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { getCorrelationId } from './context/correlation-id.context';
+import {
+  dataSource,
+  RegisterDto,
+} from './validators/is-unique-email.validator';
 
 @Controller()
 export class AppController {
@@ -73,5 +81,12 @@ export class AppController {
       correlationId: correlationId,
       message: 'Correlation ID accessed via AsyncLocalStorage',
     };
+  }
+
+  @Post('register')
+  @UsePipes(ValidationPipe)
+  register(@Body() body: RegisterDto) {
+    dataSource.push(body.email);
+    return `Registered ${body.email}`;
   }
 }

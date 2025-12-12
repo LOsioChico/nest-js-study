@@ -19,6 +19,10 @@ All interceptors are registered only on the routes they are applied to.
 
 **HttpException Filter** - Exception filter that catches all HttpException exceptions and returns standardized error responses. Applied to specific routes using `@UseFilters()` decorator.
 
+### Validators & Pipes
+
+**Custom Validator (IsUniqueEmail)** - Custom async validator constraint that checks if an email is unique. Demonstrates how to create custom validation logic using `class-validator`.
+
 ## 🚀 Quick Start
 
 ```bash
@@ -49,6 +53,7 @@ RETRY_DELAY=1000
   - `?type=forbidden` - 403 error
   - `?type=server-error` - 500 error
 - `GET /correlation-id` - Returns the correlation ID for the current request
+- `POST /register` - Demonstrates validation pipe with custom validator. Validates email format and uniqueness.
 
 ## 🏗️ Project Structure
 
@@ -61,6 +66,8 @@ src/
 │   └── retry.interceptor.ts
 ├── filters/
 │   └── http-exception.filter.ts
+├── validators/
+│   └── is-unique-email.validator.ts
 ├── context/
 │   └── correlation-id.context.ts
 ├── app.controller.ts
