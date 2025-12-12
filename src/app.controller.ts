@@ -34,11 +34,6 @@ export class AppController {
     );
   }
 
-  @Get('fast')
-  getFast(): string {
-    return 'This endpoint responds quickly';
-  }
-
   @Get('correlation-id')
   getCorrelationId() {
     // Access correlation ID from AsyncLocalStorage
