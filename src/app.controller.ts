@@ -19,6 +19,7 @@ import {
   dataSource,
   RegisterDto,
 } from './validators/is-unique-email.validator';
+import { ParsePositiveIntPipe } from './pipes/parse-positive-int.pipe';
 
 @Controller()
 export class AppController {
@@ -88,5 +89,15 @@ export class AppController {
   register(@Body() body: RegisterDto) {
     dataSource.push(body.email);
     return `Registered ${body.email}`;
+  }
+
+  @Get('parse-int')
+  @UsePipes(ParsePositiveIntPipe)
+  parseInt(@Query('id') id: number) {
+    return {
+      id,
+      message: 'Parsed ID',
+      type: typeof id,
+    };
   }
 }

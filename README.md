@@ -22,6 +22,7 @@ All interceptors are registered only on the routes they are applied to.
 ### Validators & Pipes
 
 **Custom Validator (IsUniqueEmail)** - Custom async validator constraint that checks if an email is unique. Demonstrates how to create custom validation logic using `class-validator`.
+**Parse Positive Int Pipe** - Pipe that parses a string to a positive integer. Demonstrates how to create a custom pipe using `@nestjs/common`.
 
 ## 🚀 Quick Start
 
@@ -54,6 +55,7 @@ RETRY_DELAY=1000
   - `?type=server-error` - 500 error
 - `GET /correlation-id` - Returns the correlation ID for the current request
 - `POST /register` - Demonstrates validation pipe with custom validator. Validates email format and uniqueness.
+- `GET /parse-int?id=<id>` - Demonstrates parse positive int pipe. Parses the id query parameter and returns the parsed id.
 
 ## 🏗️ Project Structure
 
@@ -70,6 +72,8 @@ src/
 │   └── is-unique-email.validator.ts
 ├── context/
 │   └── correlation-id.context.ts
+├── pipes/
+│   └── parse-positive-int.pipe.ts
 ├── app.controller.ts
 ├── app.module.ts
 ├── main.ts
